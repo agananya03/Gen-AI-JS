@@ -13,6 +13,8 @@
   "packageManager": "pnpm@10.15.0",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "groq": "^5.0.0",
+    "groq-sdk": "^0.37.0",
     "js-tiktoken": "^1.0.21",
     "openai": "^6.10.0"
   }
