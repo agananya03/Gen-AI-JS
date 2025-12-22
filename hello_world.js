@@ -13,7 +13,7 @@ async function runChat() {
         content: "Hey, How are you ? What is your name?",
       },
     ],
-    model: "llama-3.3-70b-versatile",
+    model: "llama-3.1-8b-instant",
   });
 
   console.log(chatCompletion.choices[0].message.content);

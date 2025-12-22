@@ -8,10 +8,7 @@ const client = new Groq({
 
 async function getweatherDetailsbycity(cityname = '') {
     const url = `https://wttr.in/${cityname.toLowerCase()}?format=%c+%t`
-    const {data} = await axios.get(url, { responseType: 'text',timeout: 5000,
-    headers: {
-      "User-Agent": "Mozilla/5.0"
-    }});
+    const {data} = await axios.get(url, { responseType: 'text'});
     return `The current weather of ${cityname} is ${data}`
 }
 
@@ -46,7 +43,7 @@ async function main(){
         },
         {
             role: 'user',
-            content: 'Tell me the current weather of Delhi.'
+            content: 'Tell me the current weather of Mumbai.'
         },
     ];
     const response = await client.chat.completions.create({
