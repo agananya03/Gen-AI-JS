@@ -1,23 +1,22 @@
-import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+import { CohereEmbeddings } from "@langchain/cohere";
 import { QdrantVectorStore } from "@langchain/qdrant";
-import OpenAI from "openai";
+import Groq from "groq-sdk";
 import 'dotenv/config'
 
-const openai = new OpenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY
 });
 
 async function chat() {
-    const userQuery = 'Can you tell me about rules of undertaking by parent/guardian'
-    const embeddings = new GoogleGenerativeAIEmbeddings({
-    apiKey: process.env.GEMINI_API_KEY,
-    model: "models/embedding-001"
-});
+    const userQuery = 'Can you tell me about BigBang model'
+    const embeddings = new CohereEmbeddings({
+        apiKey: process.env.COHERE_API_KEY,
+        model: "embed-english-v3.0",
+    });
 
 const vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
     url: 'http://localhost:6333',
-    collectionName: 'Gen_ai_collection'
+    collectionName: 'Gen_aicollection'
 });
 
 const vectorSearcher = vectorStore.asRetriever({
@@ -33,16 +32,18 @@ const SYSTEM_PROMPT = `
     ${JSON.stringify(relevantChunk)}
 `
 
-const response = await openai.chat.completions.create({
-    model: "gemini-1.5-flash",
-    messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-            role: "user",
-            content: userQuery,
-        },
-    ],
-});
+const response = await groq.chat.completions.create({
+        model: "llama-3.3-70b-versatile", // or "llama-3.1-70b-versatile", "llama-3.1-8b-instant"
+        messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            {
+                role: "user",
+                content: userQuery,
+            },
+        ],
+        temperature: 0.7,
+        max_tokens: 1024,
+    });
 console.log(`> ${response.choices[0].message.content}`);
 }
 
